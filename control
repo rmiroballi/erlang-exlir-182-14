@@ -1,0 +1,8 @@
+Package: esl-erlang
+Version: 1:18.2
+Section: base
+Priority: optional
+Architecture: amd64
+Depends:
+Maintainer: Your Name <you@email.com>
+Description: Homebrew esl-erlang

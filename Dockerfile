@@ -18,7 +18,9 @@ RUN set -xe \
             build-essential \
             autoconf \
             libncurses5-dev \
-            libncursesw5-dev ' \
+            libncursesw5-dev \
+			git \
+			ca-certificates ' \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends $runtimeDeps \
 	&& apt-get install -y --no-install-recommends $buildDeps
@@ -35,9 +37,19 @@ RUN set -xe \
 	  && gnuArch=x86_64-linux-gnu \
 	  && ./configure --build="$gnuArch" \
 	  && make -j$(nproc) \
-	  && make install ) \
+	  && make DESTDIR=/tmp/erlang install ) \
 	&& find /usr/local -name examples | xargs rm -rf \
 	&& rm -rf $ERL_TOP /var/lib/apt/lists/*
+
+COPY control /tmp/erlang/DEBIAN/control
+
+RUN set -xe \
+    && cd /tmp \
+	&& dpkg-deb --build erlang \
+	&& dpkg -i /tmp/erlang.deb \
+	&& dpkg -i /tmp/erlang.deb \
+    && rm -rf erlang \
+	&& rm erlang.deb
 
 
 # extra useful tools here: rebar & rebar3
