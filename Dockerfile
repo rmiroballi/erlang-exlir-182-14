@@ -1,5 +1,7 @@
 FROM ubuntu:14.04
 
+RUN rm /usr/sbin/policy-rc.d 
+
 # erlang
 ENV OTP_VERSION="18.2.3"
 
