@@ -1,0 +1,33 @@
+version: "3"
+services: 
+  ee-182-14:
+    image: rmiroballi/erlang-elixir-182-14:latest
+    command: "tail -f /dev/null"
+
+  postgres:
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+    volumes:  
+      - ./docker-entrypoint-initdb.d/users-and-db.sql:/docker-entrypoint-initdb.d/users-and-db.sql
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    
+  rest2redis:
+    image: brk/rest2redis:latest
+    environment: 
+      - REST2REDIS_REDIS_HOST=redis-cluster
+      - REST2REDIS_REDIS_PORT=7000
+    ports:
+      - "8888:8888"
+    depends_on: 
+      - redis-cluster
+
+  redis-cluster:
+    image: grokzen/redis-cluster:latest
+    ports: 
+      - "7000-7007:7000-7007"
+      - "5000-5002:5000-5002"
