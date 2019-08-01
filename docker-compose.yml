@@ -3,6 +3,10 @@ services:
   ee-182-14:
     image: rmiroballi/erlang-elixir-182-14:latest
     command: "tail -f /dev/null"
+    depends_on: 
+      - rest2redis
+      - postgres
+      - redis
 
   postgres:
     image: postgres:9.6
@@ -21,6 +25,7 @@ services:
     environment: 
       - REST2REDIS_REDIS_HOST=redis-cluster
       - REST2REDIS_REDIS_PORT=7000
+      - REST2REDIS_SKIP_FULL_COVERAGE_CHECK=False
     ports:
       - "8888:8888"
     depends_on: 
